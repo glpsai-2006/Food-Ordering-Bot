@@ -1,0 +1,118 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": ["Hi", "Hello", "Hey", "Good morning", "Good evening"],
+      "responses": ["Hello! Welcome to FoodBot. What would you like to order?", "Hi there! Ready to take your order!"]
+    },
+    {
+      "tag": "menu",
+      "patterns": ["What's on the menu?", "Show me the menu", "What do you have?", "What can I order?", "Menu please", "Show menu"],
+      "responses": ["Here is our menu! Use the menu panel on the right to explore varieties and add items."]
+    },
+    {
+      "tag": "order",
+      "patterns": ["I want to order", "I'd like a", "Can I get", "Give me", "I'll have", "Order a", "I want"],
+      "responses": ["Sure! What would you like to order? You can pick from the menu or just type it!"]
+    },
+    {
+      "tag": "order_pizza",
+      "patterns": [
+        "I want pizza", "Order pizza", "Give me a pizza", "I'll have pizza", "Pizza please",
+        "I want two pizzas", "2 pizzas", "two pizzas", "give me 3 pizzas",
+        "margherita pizza", "pepperoni pizza", "bbq chicken pizza", "veggie pizza",
+        "I want a margherita", "give me pepperoni", "bbq pizza please"
+      ],
+      "responses": ["🍕 Pizza added to your order! Anything else?"]
+    },
+    {
+      "tag": "order_burger",
+      "patterns": [
+        "I want a burger", "Order burger", "Give me a burger", "I'll have a burger", "Burger please",
+        "two burgers", "2 burgers", "give me 3 burgers",
+        "classic burger", "cheese burger", "cheeseburger", "chicken burger", "veggie burger",
+        "I want a cheeseburger", "give me a chicken burger", "classic burger please"
+      ],
+      "responses": ["🍔 Burger added to your order! Anything else?"]
+    },
+    {
+      "tag": "order_pasta",
+      "patterns": [
+        "I want pasta", "Order pasta", "Give me pasta", "I'll have pasta", "Pasta please",
+        "two pastas", "2 pasta",
+        "alfredo", "carbonara", "penne arrabbiata", "spaghetti bolognese",
+        "I want alfredo", "give me carbonara", "spaghetti please"
+      ],
+      "responses": ["🍝 Pasta added to your order! Anything else?"]
+    },
+    {
+      "tag": "order_salad",
+      "patterns": [
+        "I want a salad", "Order salad", "Give me a salad", "I'll have salad", "Salad please",
+        "two salads", "2 salads",
+        "caesar salad", "greek salad", "garden salad", "pasta salad",
+        "I want a caesar", "give me greek salad", "garden salad please"
+      ],
+      "responses": ["🥗 Salad added to your order! Anything else?"]
+    },
+    {
+      "tag": "order_fries",
+      "patterns": [
+        "I want fries", "Order fries", "Give me fries", "I'll have fries", "Fries please",
+        "two fries", "2 fries",
+        "regular fries", "curly fries", "cheese fries", "sweet potato fries",
+        "give me cheese fries", "curly fries please"
+      ],
+      "responses": ["🍟 Fries added to your order! Anything else?"]
+    },
+    {
+      "tag": "order_drink",
+      "patterns": [
+        "I want a drink", "Order a drink", "Give me a drink", "I'll have a drink", "Drink please",
+        "two drinks", "2 drinks",
+        "coke", "pepsi", "orange juice", "lemonade", "water", "milkshake",
+        "give me a coke", "pepsi please", "I want orange juice", "milkshake please"
+      ],
+      "responses": ["🥤 Drink added to your order! Anything else?"]
+    },
+    {
+      "tag": "order_dessert",
+      "patterns": [
+        "I want dessert", "Order dessert", "Give me dessert", "I'll have dessert", "Dessert please",
+        "chocolate cake", "ice cream", "brownie", "cheesecake",
+        "give me chocolate cake", "ice cream please", "I want a brownie"
+      ],
+      "responses": ["🍰 Dessert added to your order! Anything else?"]
+    },
+    {
+      "tag": "view_cart",
+      "patterns": ["Show my order", "What's in my cart?", "View cart", "My order", "What did I order?", "Cart"],
+      "responses": ["cart"]
+    },
+    {
+      "tag": "checkout",
+      "patterns": ["Checkout", "Place order", "Confirm order", "I'm done", "That's all", "Complete order", "Pay now"],
+      "responses": ["checkout"]
+    },
+    {
+      "tag": "remove_item",
+      "patterns": ["Remove pizza", "Remove burger", "Remove pasta", "Remove salad", "Remove fries", "Remove drink", "Remove dessert", "Delete item"],
+      "responses": ["remove"]
+    },
+    {
+      "tag": "cancel",
+      "patterns": ["Cancel order", "Clear cart", "Start over", "Remove everything", "Empty cart"],
+      "responses": ["Your order has been cancelled. Feel free to start a new order!"]
+    },
+    {
+      "tag": "goodbye",
+      "patterns": ["Bye", "Goodbye", "See you", "Thanks bye", "Exit"],
+      "responses": ["Thank you for visiting FoodBot! Goodbye! 👋", "See you next time! 😊"]
+    },
+    {
+      "tag": "thanks",
+      "patterns": ["Thanks", "Thank you", "That's helpful", "Great", "Awesome"],
+      "responses": ["You're welcome! Anything else I can help with?", "Happy to help!"]
+    }
+  ]
+}

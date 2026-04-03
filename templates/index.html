@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🍽️ FoodBot</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f4f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+
+    .wrapper { display: flex; gap: 16px; width: 100%; max-width: 1100px; align-items: flex-start; }
+
+    /* ── MENU PANEL ── */
+    .menu-panel { width: 320px; background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; flex-shrink: 0; }
+    .menu-panel h2 { background: #ff6b35; color: #fff; padding: 14px 18px; font-size: 1rem; }
+
+    .category-tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; border-bottom: 1px solid #eee; }
+    .category-tabs button { background: #fff3ee; color: #ff6b35; border: 1px solid #ff6b35; border-radius: 20px; padding: 4px 12px; font-size: 0.78rem; cursor: pointer; transition: 0.2s; }
+    .category-tabs button.active, .category-tabs button:hover { background: #ff6b35; color: #fff; }
+
+    .variety-list { padding: 10px; max-height: 420px; overflow-y: auto; }
+    .variety-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-radius: 10px; margin-bottom: 6px; background: #fafafa; border: 1px solid #eee; }
+    .variety-item .name { font-size: 0.88rem; font-weight: 600; color: #333; }
+    .variety-item .price { font-size: 0.82rem; color: #ff6b35; font-weight: bold; }
+    .variety-item .controls { display: flex; align-items: center; gap: 6px; }
+    .qty-btn { background: #ff6b35; color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 0.9rem; cursor: pointer; line-height: 1; }
+    .qty-display { font-size: 0.85rem; font-weight: bold; min-width: 16px; text-align: center; }
+    .add-btn { background: #ff6b35; color: #fff; border: none; border-radius: 8px; padding: 4px 10px; font-size: 0.78rem; cursor: pointer; }
+    .add-btn:hover { background: #e55a25; }
+
+    /* ── CHAT ── */
+    .chat-container { flex: 1; background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .chat-header { background: #ff6b35; color: #fff; padding: 16px 20px; text-align: center; }
+    .chat-header h1 { font-size: 1.2rem; }
+    .chat-header span { font-size: 0.82rem; opacity: 0.85; }
+
+    .chat-messages { flex: 1; padding: 16px; overflow-y: auto; height: 380px; display: flex; flex-direction: column; gap: 10px; }
+    .message { max-width: 80%; padding: 10px 14px; border-radius: 18px; font-size: 0.88rem; line-height: 1.5; white-space: pre-wrap; }
+    .bot { background: #f1f1f1; color: #333; align-self: flex-start; border-bottom-left-radius: 4px; }
+    .user { background: #ff6b35; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+
+    .quick-btns { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px; border-top: 1px solid #eee; }
+    .quick-btns button { background: #fff3ee; color: #ff6b35; border: 1px solid #ff6b35; border-radius: 16px; padding: 4px 12px; font-size: 0.78rem; cursor: pointer; transition: 0.2s; }
+    .quick-btns button:hover { background: #ff6b35; color: #fff; }
+
+    .chat-input { display: flex; padding: 10px 12px; border-top: 1px solid #eee; gap: 8px; }
+    .chat-input input { flex: 1; padding: 9px 14px; border: 1px solid #ddd; border-radius: 24px; outline: none; font-size: 0.88rem; }
+    .chat-input input:focus { border-color: #ff6b35; }
+    .chat-input button { background: #ff6b35; color: #fff; border: none; border-radius: 24px; padding: 9px 18px; cursor: pointer; font-size: 0.88rem; }
+    .chat-input button:hover { background: #e55a25; }
+
+    /* ── CART PANEL ── */
+    .cart-panel { width: 260px; background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; flex-shrink: 0; }
+    .cart-panel h2 { background: #333; color: #fff; padding: 14px 18px; font-size: 1rem; }
+    .cart-items { padding: 10px; max-height: 360px; overflow-y: auto; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; border-bottom: 1px solid #f0f0f0; font-size: 0.82rem; }
+    .cart-item .item-name { color: #333; }
+    .cart-item .item-price { color: #ff6b35; font-weight: bold; }
+    .cart-item .remove-btn { background: none; border: none; color: #ccc; cursor: pointer; font-size: 1rem; }
+    .cart-item .remove-btn:hover { color: #e55a25; }
+    .cart-total { padding: 12px 18px; border-top: 2px solid #eee; font-weight: bold; font-size: 0.95rem; display: flex; justify-content: space-between; }
+    .checkout-btn { width: 100%; background: #ff6b35; color: #fff; border: none; padding: 12px; font-size: 0.95rem; cursor: pointer; font-weight: bold; }
+    .checkout-btn:hover { background: #e55a25; }
+    .empty-cart { text-align: center; color: #aaa; padding: 20px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- MENU PANEL -->
+  <div class="menu-panel">
+    <h2>📋 Our Menu</h2>
+    <div class="category-tabs" id="categoryTabs"></div>
+    <div class="variety-list" id="varietyList"></div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="chat-container">
+    <div class="chat-header">
+      <h1>🍽️ FoodBot</h1>
+      <span>Your AI Food Ordering Assistant</span>
+    </div>
+    <div class="chat-messages" id="messages">
+      <div class="message bot">👋 Welcome to FoodBot! Browse the menu on the left or just type your order!</div>
+    </div>
+    <div class="quick-btns">
+      <button onclick="sendQuick('Show me the menu')">📋 Menu</button>
+      <button onclick="sendQuick('I want two pizzas')">🍕 2 Pizzas</button>
+      <button onclick="sendQuick('I want a burger')">🍔 Burger</button>
+      <button onclick="sendQuick('View cart')">🛒 Cart</button>
+      <button onclick="sendQuick('Checkout')">✅ Checkout</button>
+      <button onclick="sendQuick('Cancel order')">❌ Cancel</button>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="e.g. I want 2 pepperoni pizzas and a coke..." onkeydown="if(event.key==='Enter') sendMessage()"/>
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <!-- CART PANEL -->
+  <div class="cart-panel">
+    <h2>🛒 Your Cart</h2>
+    <div class="cart-items" id="cartItems"><div class="empty-cart">Your cart is empty</div></div>
+    <div class="cart-total"><span>Total</span><span id="cartTotal">$0</span></div>
+    <button class="checkout-btn" onclick="sendQuick('Checkout')">✅ Place Order</button>
+  </div>
+
+</div>
+
+<script>
+  const MENU = {{ menu | tojson }};
+  const quantities = {};
+  let activeCategory = Object.keys(MENU)[0];
+
+  // Build category tabs
+  function buildTabs() {
+    const tabs = document.getElementById("categoryTabs");
+    Object.entries(MENU).forEach(([cat, data]) => {
+      const btn = document.createElement("button");
+      btn.textContent = data.emoji + " " + cap(cat);
+      btn.dataset.cat = cat;
+      if (cat === activeCategory) btn.classList.add("active");
+      btn.onclick = () => { activeCategory = cat; buildTabs(); buildVarieties(); };
+      tabs.appendChild(btn);
+    });
+  }
+
+  // Build variety list for active category
+  function buildVarieties() {
+    const list = document.getElementById("varietyList");
+    list.innerHTML = "";
+    const data = MENU[activeCategory];
+    Object.entries(data.varieties).forEach(([variety, price]) => {
+      const key = activeCategory + "_" + variety;
+      if (!quantities[key]) quantities[key] = 1;
+
+      const div = document.createElement("div");
+      div.className = "variety-item";
+      div.innerHTML = `
+        <div>
+          <div class="name">${variety}</div>
+          <div class="price">$${price}</div>
+        </div>
+        <div class="controls">
+          <button class="qty-btn" onclick="changeQty('${key}', -1)">−</button>
+          <span class="qty-display" id="qty_${key}">${quantities[key]}</span>
+          <button class="qty-btn" onclick="changeQty('${key}', 1)">+</button>
+          <button class="add-btn" onclick="addFromMenu('${activeCategory}', '${variety}', '${key}')">Add</button>
+        </div>`;
+      list.appendChild(div);
+    });
+  }
+
+  function changeQty(key, delta) {
+    quantities[key] = Math.max(1, (quantities[key] || 1) + delta);
+    const el = document.getElementById("qty_" + key);
+    if (el) el.textContent = quantities[key];
+  }
+
+  async function addFromMenu(category, variety, key) {
+    const qty = quantities[key] || 1;
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ direct_add: true, category, variety, qty })
+    });
+    const data = await res.json();
+    appendMessage(data.response, "bot");
+    refreshCart();
+  }
+
+  function appendMessage(text, sender) {
+    const messages = document.getElementById("messages");
+    const div = document.createElement("div");
+    div.className = "message " + sender;
+    div.textContent = text;
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById("userInput");
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    appendMessage(text, "user");
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
+    });
+    const data = await res.json();
+    appendMessage(data.response, "bot");
+    refreshCart();
+  }
+
+  function sendQuick(text) {
+    document.getElementById("userInput").value = text;
+    sendMessage();
+  }
+
+  async function refreshCart() {
+    const res = await fetch("/cart");
+    const data = await res.json();
+    const container = document.getElementById("cartItems");
+    container.innerHTML = "";
+    if (!data.cart.length) {
+      container.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+    } else {
+      data.cart.forEach((entry, i) => {
+        const emoji = MENU[entry.category]?.emoji || "";
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <span class="item-name">${emoji} ${entry.qty}x ${entry.variety}</span>
+          <span class="item-price">$${entry.price * entry.qty}</span>`;
+        container.appendChild(div);
+      });
+    }
+    document.getElementById("cartTotal").textContent = "$" + data.total;
+  }
+
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  buildTabs();
+  buildVarieties();
+</script>
+</body>
+</html>
