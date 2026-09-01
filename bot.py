@@ -1,17 +1,20 @@
 import json
+import os
 import pickle
 import random
 import nltk
 from nltk.stem import LancasterStemmer
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 stemmer = LancasterStemmer()
 
-with open("intents.json", encoding="utf-8") as f:
+with open(os.path.join(BASE_DIR, "intents.json"), encoding="utf-8") as f:
     intents = json.load(f)
 
-words = pickle.load(open("words.pkl", "rb"))
-classes = pickle.load(open("classes.pkl", "rb"))
-model = pickle.load(open("food_bot_model.pkl", "rb"))
+words = pickle.load(open(os.path.join(BASE_DIR, "words.pkl"), "rb"))
+classes = pickle.load(open(os.path.join(BASE_DIR, "classes.pkl"), "rb"))
+model = pickle.load(open(os.path.join(BASE_DIR, "food_bot_model.pkl"), "rb"))
 
 MENU_PRICES = {
     "pizza": 12, "burger": 8, "pasta": 10,

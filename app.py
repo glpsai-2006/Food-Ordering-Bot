@@ -1,24 +1,36 @@
 from flask import Flask, render_template, request, jsonify, session
 import json
+import os
 import pickle
 import random
 import re
 import nltk
 from nltk.stem import LancasterStemmer
 
-nltk.download('punkt', quiet=True)
-nltk.download('punkt_tab', quiet=True)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+def init_nltk():
+    for resource in ['punkt', 'punkt_tab']:
+        try:
+            nltk.data.find(f'tokenizers/{resource}')
+        except LookupError:
+            try:
+                nltk.download(resource, quiet=True)
+            except Exception as e:
+                print(f"Warning: Failed to download NLTK resource {resource}: {e}")
+
+init_nltk()
 
 stemmer = LancasterStemmer()
 
-with open("intents.json", encoding="utf-8") as f:
+with open(os.path.join(BASE_DIR, "intents.json"), encoding="utf-8") as f:
     intents = json.load(f)
 
-words = pickle.load(open("words.pkl", "rb"))
-model = pickle.load(open("food_bot_model.pkl", "rb"))
+words = pickle.load(open(os.path.join(BASE_DIR, "words.pkl"), "rb"))
+model = pickle.load(open(os.path.join(BASE_DIR, "food_bot_model.pkl"), "rb"))
 
 app = Flask(__name__)
-app.secret_key = "foodbot_secret"
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "foodbot_default_secret_key_123")
 
 MENU = {
     "pizza": {
@@ -208,4 +220,5 @@ def get_cart():
     return jsonify({"cart": cart, "total": total})
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)

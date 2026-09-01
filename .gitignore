@@ -28,3 +28,8 @@ Thumbs.db
 
 # Secrets (add your secret key to env vars instead)
 .env
+
+# Explicitly track trained model files
+!*.pkl
+!intents.json
+
